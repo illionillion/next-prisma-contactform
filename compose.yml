@@ -1,0 +1,26 @@
+services:
+  app:
+    container_name: app
+    image: node:lts-alpine
+    working_dir: /app
+    command: sh -c "chmod +x ./migrate.sh && ./migrate.sh && npm run dev"
+    volumes:
+      - ./app:/app
+    tty: true
+    ports:
+      - ${NEXTJS_PORT}:3000
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+  db:
+    container_name: db
+    image: postgres:15.1-alpine
+    ports:
+      - ${DB_PORT}:5432
+    environment:
+      TZ: Asia/Tokyo
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+    restart: always
