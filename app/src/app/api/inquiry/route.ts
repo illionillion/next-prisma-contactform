@@ -11,6 +11,20 @@ export const POST = async (request: NextRequest) => {
     content: string;
   };
 
+  if (!name || !email || !content) {
+    return NextResponse.json(
+      {
+        message: "データが不足しています。",
+      },
+      {
+        status: 400,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  }
+
   try {
     // お問い合わせ内容をデータベースに保存
     await prisma.inquiry.create({
