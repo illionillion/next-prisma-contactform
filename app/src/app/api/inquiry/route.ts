@@ -11,27 +11,42 @@ export const POST = async (request: NextRequest) => {
     content: string;
   };
 
-  // お問い合わせ内容をデータベースに保存
-  await prisma.inquiry.create({
-    data: {
-      name,
-      email,
-      content,
-      // SQLみたいに勝手に現在時刻が割り当てられると思ったら必須らしい
-      createdAt: new Date(),
-    },
-  });
-
-  // レスポンスを返す
-  return NextResponse.json(
-    {
-      message: "お問い合わせありがとうございます。",
-    },
-    {
-      headers: {
-        "Content-Type": "application/json",
+  try {
+    // お問い合わせ内容をデータベースに保存
+    await prisma.inquiry.create({
+      data: {
+        name,
+        email,
+        content,
+        // SQLみたいに勝手に現在時刻が割り当てられると思ったら必須らしい
+        createdAt: new Date(),
       },
-      status: 200,
-    }
-  );
+    });
+
+    // レスポンスを返す
+    return NextResponse.json(
+      {
+        message: "お問い合わせありがとうございます。",
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        status: 200,
+      }
+    );
+  } catch (error) {
+    console.error("post inquiry error:", error);
+    return NextResponse.json(
+      {
+        message: "サーバーエラー",
+      },
+      {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  }
 };
