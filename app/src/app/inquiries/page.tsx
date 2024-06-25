@@ -13,20 +13,21 @@ const Page = async () => {
             createdAt: true,
         }
     })
-    const cols = Object.keys(data[0])
     return <Container m="auto" as={Center}>
         <Heading>お問合せ一覧</Heading>
         <NativeTable>
             <Thead>
                 <Tr>
-                    {cols.map(((col, i) => (
-                        <Th key={i}>{col}</Th>
-                    )))}
+                    <Th>id</Th>
+                    <Th>name</Th>
+                    <Th>email</Th>
+                    <Th>content</Th>
+                    <Th>createdAt</Th>
                 </Tr>
             </Thead>
             <Tbody>
                 {
-                    data.map((row, i) => (
+                    data.length > 0 ? data.map((row, i) => (
                         <Tr key={i}>
                             <Td>{row["id"]}</Td>
                             <Td>{row["name"]}</Td>
@@ -34,7 +35,9 @@ const Page = async () => {
                             <Td>{row["content"]}</Td>
                             <Td>{row["createdAt"]?.toISOString()}</Td>
                         </Tr>
-                    ))
+                    )) : <Tr>
+                        <Td colSpan={5} textAlign="center">お問合せがありません</Td>
+                    </Tr>
                 }
             </Tbody>
         </NativeTable>
