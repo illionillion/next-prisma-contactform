@@ -12,7 +12,7 @@ export default function Home() {
 
     const value = e.currentTarget.value
 
-    switch (e.currentTarget.name) {
+    switch (value) {
       case "name":
         setName(value)
         break;
