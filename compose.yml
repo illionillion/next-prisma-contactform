@@ -9,6 +9,7 @@ services:
     tty: true
     ports:
       - ${NEXTJS_PORT}:3000
+      # - 5555:5555 # npx prisma studioで「:5555」で管理ツールが起動
     depends_on:
       - db
     environment:
