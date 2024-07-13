@@ -11,9 +11,10 @@ export default function Home() {
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 
+        const name = e.currentTarget.name
         const value = e.currentTarget.value
 
-        switch (e.currentTarget.name) {
+        switch (name) {
             case "name":
                 setName(value)
                 break;
