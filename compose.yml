@@ -3,7 +3,7 @@ services:
     container_name: app
     image: node:lts-alpine
     working_dir: /app
-    command: sh -c "chmod +x ./migrate.sh && ./migrate.sh && npm run dev"
+    command: sh -c "chmod +x ./migrate.sh && ./migrate.sh && npm run seed && npm run dev"
     volumes:
       - ./app:/app
     tty: true
