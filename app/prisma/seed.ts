@@ -10,13 +10,17 @@ async function main() {
       content: "hello",
       createdAt: new Date(),
     },
+    {
+      name: "John2",
+      email: "john2@email.com",
+      content: "hello world",
+      createdAt: new Date(),
+    },
   ];
 
-  for (const inquiry of inquirys) {
-    await prisma.inquiry.create({
-      data: inquiry,
-    });
-  }
+  await prisma.$transaction(
+    inquirys.map((inquiry) => prisma.inquiry.create({ data: inquiry }))
+  );
 
   console.log("データ挿入完了");
 }
