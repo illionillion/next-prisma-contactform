@@ -1,9 +1,7 @@
-import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { inquirySchema } from "../../../../schema/inquiry";
-
-const prisma = new PrismaClient();
+import { inquirySchema } from "@/schema/inquiry";
+import { prisma } from "@/utils/prisma";
 
 export const POST = async (request: NextRequest) => {
   try {

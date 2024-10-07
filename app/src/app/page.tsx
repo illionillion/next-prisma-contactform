@@ -11,7 +11,7 @@ import {
 } from "@yamada-ui/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { InquiryForm, inquirySchema } from "../../schema/inquiry";
+import { InquiryForm, inquirySchema } from "@/schema/inquiry";
 
 export default function Home() {
   const {

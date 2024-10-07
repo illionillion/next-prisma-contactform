@@ -1,6 +1,5 @@
-import { Prisma, PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/utils/prisma";
+import { Prisma } from "@prisma/client";
 
 async function main() {
   const inquirys: Prisma.InquiryCreateInput[] = [
