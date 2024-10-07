@@ -1,76 +1,89 @@
-"use client"
-import { Button, Center, Container, FormControl, Heading, Input, Textarea, VStack } from "@yamada-ui/react";
-import { ChangeEvent, FormEvent, useState } from "react";
+"use client";
+import {
+  Button,
+  Center,
+  Container,
+  FormControl,
+  Heading,
+  Input,
+  Textarea,
+  VStack,
+} from "@yamada-ui/react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { InquiryForm, inquirySchema } from "../../schema/inquiry";
 
 export default function Home() {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<InquiryForm>({
+    resolver: zodResolver(inquirySchema),
+  });
 
-  const [name, setName] = useState<string>('')
-  const [email, setEmail] = useState<string>('')
-  const [content, setContent] = useState<string>('')
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-
-    const name = e.currentTarget.name
-    const value = e.currentTarget.value
-    
-    switch (name) {
-      case "name":
-        setName(value)
-        break;
-      case "email":
-        setEmail(value)
-        break;
-      case "content":
-        setContent(value)
-        break;
-
-      default:
-        break;
-    }
-  }
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const onSubmit = async (data: InquiryForm) => {
     try {
-      const response = await fetch('/api/inquiry', {
-        method: 'POST',
-        body: JSON.stringify({
-          name,
-          email,
-          content
-        }),
+      const response = await fetch("/api/inquiry", {
+        method: "POST",
+        body: JSON.stringify(data),
         headers: {
           "Content-Type": "application/json",
-        }
-      })
-      const json = await response.json()
+        },
+      });
+
+      const json = await response.json();
       console.log(json);
+
       if (response.status === 200) {
-        setName('')
-        setEmail('')
-        setContent('')
+        reset(); // Reset the form after successful submission
       }
     } catch (error) {
       console.log(error);
     }
-
-  }
+  };
 
   return (
     <Container m="auto" as={Center}>
       <Heading>お問合せフォーム</Heading>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <VStack>
-          <FormControl label="お名前" minW="md" isRequired>
-            <Input type="text" name="name" placeholder="名前" value={name} onChange={handleChange} />
+          <FormControl label="お名前" minW="md"
+            isInvalid={!!errors.name}
+            errorMessage={errors.name ? errors.name.message : undefined}
+          >
+            <Input
+              type="text"
+              placeholder="名前"
+              {...register("name")}
+            />
           </FormControl>
-          <FormControl label="メールアドレス" minW="md" isRequired>
-            <Input type="email" name="email" placeholder="メールアドレス" value={email} onChange={handleChange} />
+
+          <FormControl label="メールアドレス" minW="md"
+            isInvalid={!!errors.email}
+            errorMessage={errors.email ? errors.email.message : undefined}
+          >
+            <Input
+              type="text" // 敢えてtextにしてる
+              placeholder="メールアドレス"
+              {...register("email")}
+            />
           </FormControl>
-          <FormControl label="内容" minW="md" isRequired>
-            <Textarea placeholder="内容" name="content" value={content} onChange={handleChange} />
+
+          <FormControl label="内容" minW="md"
+            isInvalid={!!errors.content}
+            errorMessage={errors.content ? errors.content.message : undefined}
+          >
+            <Textarea
+              placeholder="内容"
+              {...register("content")}
+            />
           </FormControl>
-          <Button type="submit">送信</Button>
+
+          <Button type="submit" isLoading={isSubmitting}>
+            送信
+          </Button>
         </VStack>
       </form>
     </Container>
