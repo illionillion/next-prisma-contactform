@@ -1,8 +1,21 @@
 import { Prisma, PrismaClient } from "@prisma/client";
+import { hash } from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
+
+  const users: Prisma.UserCreateInput[] = [
+    {
+      username: "user1",
+      password: await hash("password1", 10),
+    },
+    {
+      username: "user2",
+      password: await hash("password2", 10),
+    },
+  ];
+
   const inquirys: Prisma.InquiryCreateInput[] = [
     {
       name: "John",
@@ -18,9 +31,11 @@ async function main() {
     },
   ];
 
-  await prisma.$transaction(
-    inquirys.map((inquiry) => prisma.inquiry.create({ data: inquiry }))
-  );
+  await prisma.$transaction([
+    ...users.map((user) => prisma.user.create({ data: user })),
+    ...inquirys.map((inquiry) => prisma.inquiry.create({ data: inquiry })),
+  ]);
+
 
   console.log("データ挿入完了");
 }
